@@ -13,6 +13,8 @@ import numpy as np
 import tensorflow as tf
 import re,string
 from tensorflow.keras.layers.experimental.preprocessing import TextVectorization
+from tensorflow.keras import models,layers,preprocessing,losses,metrics,optimizers
+
 
 
 train_data_path = "data/imdb/train.csv"
@@ -45,11 +47,30 @@ def clean_text(text):
 vectorize_layer = TextVectorization(standardize = clean_text,split = 'whitespace',max_tokens=MAX_WORDS,output_mode='int',output_sequence_length=MAX_LEN)
 
 ds_text = ds_train_raw.map(lambda text,label:text)
+print("ds_text:",ds_text)
 vectorize_layer.adapt(ds_text)
 print(vectorize_layer.get_vocabulary()[0:10])
 
+
 ds_train = ds_train_raw.map(lambda text,label:(vectorize_layer(text),label)).prefetch(tf.data.experimental.AUTOTUNE)
 ds_test = ds_test_raw.map(lambda text,label:(vectorize_layer(text),label)).prefetch(tf.data.experimental.AUTOTUNE)
+print("ds_train:",ds_train)
+
+
+
+"定义模型——" \
+"1、使用sequential按层构建模型" \
+"2、函数式API构建模型" \
+"3、继承model基类来构建模型" \
+""
+class CNNModel(models.Model):
+    def __init__(self):
+        super(CNNModel,self).__init__()
+
+    def build(self,input_shape):
+        self.embedding = layers.Embedding(MAX_WORDS,7,input_length=MAX_LEN)
+        self.conv_1 = layers.Conv1D(16,)
+
 
 
 if __name__ == '__main__':
