@@ -10,11 +10,23 @@
 
 # import pandas as pd
 # import numpy as np
+
+
+#-1表示使用CPU，0表示使用GPU
+# import os
+# os.environ['CUDA_VISIBLE_DEVICES']='-1'
+
+
+
+
 import tensorflow as tf
 import re,string
 from tensorflow.keras.layers.experimental.preprocessing import TextVectorization
 from tensorflow.keras import models,layers,preprocessing,losses,metrics,optimizers
 
+
+gpus = tf.config.list_physical_devices(device_type = "GPU")
+print("gpus:",gpus)
 
 
 
@@ -185,11 +197,7 @@ def train_model(model, ds_train, ds_valid, epochs):
         valid_metric.reset_states()
 
 
-gpus = tf.config.list_physical_devices("GPU")
-
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = "0"  # 使用第几个GPU， 0是第一个
-train_model(model, ds_train, ds_test, epochs=10)
+train_model(model,ds_train,ds_test,epochs = 10)
 
 
 
