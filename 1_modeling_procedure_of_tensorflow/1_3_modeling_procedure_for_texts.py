@@ -11,7 +11,9 @@
 # import pandas as pd
 # import numpy as np
 
-
+#前提是一定要安装GPU版本的tensorflow才能使用GPU加速
+#注意CPU版本：tensorflow，GPU版本：tensorflow-gpu安装的时候一定要先装CPU在装GPU的；或者只装CPU的；或者只装GPU的
+#推荐只装GPU版本的
 #-1表示使用CPU，0表示使用GPU
 # import os
 # os.environ['CUDA_VISIBLE_DEVICES']='-1'
