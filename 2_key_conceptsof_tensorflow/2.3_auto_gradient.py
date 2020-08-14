@@ -12,6 +12,8 @@ TensorFlow使用梯度磁带tf.GradientTape来记录正向运算过程，然后�
 # f(x) = a*x**2 + b*x + c的导数,分别求a b c x 的微分
 
 import tensorflow as tf
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' # 0也是默认值，输出所有信息;1屏蔽通知信息;2屏蔽通知信息和警告信息;3屏蔽通知信息、警告信息和报错信息
 #
 # x = tf.Variable(2.0,dtype=tf.float32,name='x')
 # a = tf.constant(1.0)
@@ -50,7 +52,7 @@ import tensorflow as tf
 # 在autograph中完成最小值求解
 
 x = tf.Variable(0.0,name = "x",dtype = tf.float32)
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.01)
 
 @tf.function
 def get_gradient_apply_gradients():
@@ -58,7 +60,7 @@ def get_gradient_apply_gradients():
     b = tf.constant(-2.0)
     c = tf.constant(1.0)
 
-    for _ in tf.range(10000):
+    for _ in tf.range(1000):
         with tf.GradientTape() as tape:
             y =  a * tf.pow(x, 2) + b * x + c
         dy_dx = tape.gradient(y,x)
@@ -67,5 +69,25 @@ def get_gradient_apply_gradients():
     y = a * tf.pow(x, 2) + b * x + c
     return y
 
-print(get_gradient_apply_gradients())
-print(x)
+tf.print(get_gradient_apply_gradients())
+tf.print(x)
+
+
+x = tf.Variable(0.0,name= "x", dtype = tf.float32)
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.01)
+
+def f():
+    a = tf.constant(1.0)
+    b = tf.constant(-2.0)
+    c = tf.constant(1.0)
+    y = a * tf.pow(x, 2) + b * x + c
+    return y
+
+def train(epoch):
+    for _ in tf.range(epoch):
+        optimizer.minimize(f,[x])
+    return f()
+
+tf.print(train(1000))
+tf.print(x)
+
